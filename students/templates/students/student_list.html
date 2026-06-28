@@ -1,45 +1,72 @@
-{% extends 'students/base.html' %}
+{% extends 'students/base.html' %} {% block content %}
+<div class="card p-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="page-title mb-0"><i class="fas fa-users me-2"></i>Students</h2>
+    <a href="{% url 'student_create' %}" class="btn btn-primary">
+      <i class="fas fa-plus me-1"></i>Add Student
+    </a>
+  </div>
 
-{% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Students</h2>
-    <a href="{% url 'student_create' %}" class="btn btn-primary">Add Student</a>
-</div>
-
-<form method="GET" class="mb-3">
+  <form method="GET" class="mb-4">
     <div class="input-group">
-        <input type="text" name="q" class="form-control" placeholder="Search by name..." value="{{ query }}">
-        <button class="btn btn-outline-secondary" type="submit">Search</button>
+      <span class="input-group-text bg-white"
+        ><i class="fas fa-search"></i
+      ></span>
+      <input
+        type="text"
+        name="q"
+        class="form-control border-start-0"
+        placeholder="Search by name..."
+        value="{{ query }}"
+      />
+      <button class="btn btn-primary" type="submit">Search</button>
     </div>
-</form>
+  </form>
 
-<table class="table table-bordered table-hover">
-    <thead class="table-dark">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead>
         <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Course</th>
-            <th>Actions</th>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Course</th>
+          <th>Actions</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for student in students %}
         <tr>
-            <td>{{ student.name }}</td>
-            <td>{{ student.email }}</td>
-            <td>{{ student.phone }}</td>
-            <td>{{ student.course }}</td>
-            <td>
-                <a href="{% url 'student_update' student.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{% url 'student_delete' student.pk %}" class="btn btn-danger btn-sm">Delete</a>
-            </td>
+          <td>{{ forloop.counter }}</td>
+          <td><strong>{{ student.name }}</strong></td>
+          <td>{{ student.email }}</td>
+          <td>{{ student.phone }}</td>
+          <td><span class="badge bg-primary">{{ student.course }}</span></td>
+          <td>
+            <a
+              href="{% url 'student_update' student.pk %}"
+              class="btn btn-warning btn-sm me-1"
+            >
+              <i class="fas fa-edit"></i>
+            </a>
+            <a
+              href="{% url 'student_delete' student.pk %}"
+              class="btn btn-danger btn-sm"
+            >
+              <i class="fas fa-trash"></i>
+            </a>
+          </td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="5" class="text-center">No students found.</td>
+          <td colspan="6" class="text-center text-muted py-4">
+            <i class="fas fa-inbox fa-2x mb-2 d-block"></i>No students found.
+          </td>
         </tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

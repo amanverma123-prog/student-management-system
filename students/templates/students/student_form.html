@@ -1,26 +1,72 @@
-{% extends 'students/base.html' %}
-
-{% block content %}
-<h2>{% if student %}Edit Student{% else %}Add Student{% endif %}</h2>
-<form method="POST">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label class="form-label">Name</label>
-        <input type="text" name="name" class="form-control" value="{{ student.name }}" required>
+{% extends 'students/base.html' %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card p-4">
+      <h2 class="page-title mb-4">
+        <i
+          class="fas fa-{% if student %}edit{% else %}user-plus{% endif %} me-2"
+        ></i>
+        {% if student %}Edit Student{% else %}Add Student{% endif %}
+      </h2>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Name</label>
+          <input
+            type="text"
+            name="name"
+            class="form-control"
+            value="{{ student.name }}"
+            placeholder="Enter full name"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Email</label>
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            value="{{ student.email }}"
+            placeholder="Enter email address"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Phone</label>
+          <input
+            type="text"
+            name="phone"
+            class="form-control"
+            value="{{ student.phone }}"
+            placeholder="Enter phone number"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Course</label>
+          <input
+            type="text"
+            name="course"
+            class="form-control"
+            value="{{ student.course }}"
+            placeholder="Enter course name"
+            required
+          />
+        </div>
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn btn-primary px-4">
+            <i class="fas fa-save me-1"></i>Save
+          </button>
+          <a
+            href="{% url 'student_list' %}"
+            class="btn btn-outline-secondary px-4"
+          >
+            <i class="fas fa-times me-1"></i>Cancel
+          </a>
+        </div>
+      </form>
     </div>
-    <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" name="email" class="form-control" value="{{ student.email }}" required>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Phone</label>
-        <input type="text" name="phone" class="form-control" value="{{ student.phone }}" required>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Course</label>
-        <input type="text" name="course" class="form-control" value="{{ student.course }}" required>
-    </div>
-    <button type="submit" class="btn btn-success">Save</button>
-    <a href="{% url 'student_list' %}" class="btn btn-secondary">Cancel</a>
-</form>
+  </div>
+</div>
 {% endblock %}

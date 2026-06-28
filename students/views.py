@@ -17,8 +17,6 @@ def student_list(request):
 
 @login_required
 def student_create(request):
-    if not request.user.is_superuser:
-        return redirect('student_list')
     if request.method == 'POST':
         name = request.POST['name']
         email = request.POST['email']

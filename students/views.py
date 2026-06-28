@@ -1,20 +1,24 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Student
 
 @login_required
 def student_list(request):
     query = request.GET.get('q', '')
-    if query:
-        students = Student.objects.filter(name__icontains=query)
-    else:
+    if request.user.is_superuser:
         students = Student.objects.all()
+    else:
+        students = Student.objects.filter(created_by=request.user)
+    if query:
+        students = students.filter(name__icontains=query)
     return render(request, 'students/student_list.html', {'students': students, 'query': query})
 
 @login_required
 def student_create(request):
+    if not request.user.is_superuser:
+        return redirect('student_list')
     if request.method == 'POST':
         name = request.POST['name']
         email = request.POST['email']
@@ -24,13 +28,20 @@ def student_create(request):
             return render(request, 'students/student_form.html', {
                 'error': 'A student with this email already exists.'
             })
-        Student.objects.create(name=name, email=email, phone=phone, course=course)
+        Student.objects.create(
+            name=name, email=email,
+            phone=phone, course=course,
+            created_by=request.user
+        )
         return redirect('student_list')
     return render(request, 'students/student_form.html')
 
 @login_required
 def student_update(request, pk):
-    student = get_object_or_404(Student, pk=pk)
+    if request.user.is_superuser:
+        student = get_object_or_404(Student, pk=pk)
+    else:
+        student = get_object_or_404(Student, pk=pk, created_by=request.user)
     if request.method == 'POST':
         student.name = request.POST['name']
         student.email = request.POST['email']
@@ -42,6 +53,8 @@ def student_update(request, pk):
 
 @login_required
 def student_delete(request, pk):
+    if not request.user.is_superuser:
+        return redirect('student_list')
     student = get_object_or_404(Student, pk=pk)
     student.delete()
     return redirect('student_list')

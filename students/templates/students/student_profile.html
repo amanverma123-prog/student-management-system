@@ -1,0 +1,60 @@
+{% extends 'students/base.html' %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    {% if student %}
+    <div class="card p-4">
+      <div class="text-center mb-4">
+        <i class="fas fa-user-circle fa-5x" style="color: #667eea"></i>
+        <h3 class="page-title mt-3">{{ student.name }}</h3>
+        <span class="badge bg-primary">{{ student.course }}</span>
+      </div>
+      <hr />
+      <div class="mb-3">
+        <div class="row py-2">
+          <div class="col-4 text-muted fw-semibold">
+            <i class="fas fa-envelope me-2"></i>Email
+          </div>
+          <div class="col-8">{{ student.email }}</div>
+        </div>
+        <div class="row py-2">
+          <div class="col-4 text-muted fw-semibold">
+            <i class="fas fa-phone me-2"></i>Phone
+          </div>
+          <div class="col-8">{{ student.phone }}</div>
+        </div>
+        <div class="row py-2">
+          <div class="col-4 text-muted fw-semibold">
+            <i class="fas fa-book me-2"></i>Course
+          </div>
+          <div class="col-8">{{ student.course }}</div>
+        </div>
+        <div class="row py-2">
+          <div class="col-4 text-muted fw-semibold">
+            <i class="fas fa-calendar me-2"></i>Joined
+          </div>
+          <div class="col-8">{{ student.created_at|date:"d M Y" }}</div>
+        </div>
+      </div>
+      <hr />
+      <div class="text-center mt-3">
+        <a
+          href="{% url 'student_update' student.pk %}"
+          class="btn btn-primary px-4"
+        >
+          <i class="fas fa-edit me-1"></i>Edit My Details
+        </a>
+      </div>
+    </div>
+    {% else %}
+    <div class="card p-5 text-center">
+      <i class="fas fa-user-plus fa-4x mb-3" style="color: #667eea"></i>
+      <h3 class="page-title">Complete Your Profile</h3>
+      <p class="text-muted">You haven't added your details yet.</p>
+      <a href="{% url 'student_create' %}" class="btn btn-primary px-4 mt-2">
+        <i class="fas fa-plus me-1"></i>Add My Details
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

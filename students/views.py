@@ -9,11 +9,12 @@ def student_list(request):
     query = request.GET.get('q', '')
     if request.user.is_superuser:
         students = Student.objects.all()
+        if query:
+            students = students.filter(name__icontains=query)
+        return render(request, 'students/student_list.html', {'students': students, 'query': query})
     else:
-        students = Student.objects.filter(created_by=request.user)
-    if query:
-        students = students.filter(name__icontains=query)
-    return render(request, 'students/student_list.html', {'students': students, 'query': query})
+        student = Student.objects.filter(created_by=request.user).first()
+        return render(request, 'students/student_profile.html', {'student': student})
 
 @login_required
 def student_create(request):

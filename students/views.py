@@ -20,6 +20,10 @@ def student_create(request):
         email = request.POST['email']
         phone = request.POST['phone']
         course = request.POST['course']
+        if Student.objects.filter(email=email).exists():
+            return render(request, 'students/student_form.html', {
+                'error': 'A student with this email already exists.'
+            })
         Student.objects.create(name=name, email=email, phone=phone, course=course)
         return redirect('student_list')
     return render(request, 'students/student_form.html')

@@ -2,7 +2,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.shortcuts import render, redirect, get_object_or_404
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from .models import Student
+from .serializers import StudentSerializer
 
 @login_required
 def student_list(request):
@@ -71,3 +74,15 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'students/signup.html', {'form': form})
+
+class StudentViewSet(viewsets.ModelViewSet):
+    serializer_class = StudentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Student.objects.all()
+        return Student.objects.filter(created_by=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
